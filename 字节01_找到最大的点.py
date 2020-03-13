@@ -22,26 +22,20 @@ P为给定的二维平面整数点集。定义 P 中某点x，如果x满足 P �
 '''
 #解题思路：先把输入数组按照x坐标从小到大排序，然后进行比较：
 #只需把当前点与之后的点（x坐标更大的点）比较Y坐标即可，如果当前点的Y坐标大于之后所有点的Y坐标，那这个点就是最大点。
-class Solution:
-    def MaxPoint(self, P):
-        if not P:
-            return
-        N = P[0][0]
-        Lis = []
-        Xmin = P[1][0]
-        for i in range(1, N+1):
-            for j in range(i, N+1):
-                if P[j][0] < Xmin:
-                    Xmin = P[j][0]
-                    P[j][0] = P[i][0]
-                    P[i][0] = Xmin
-        for i in range(1, N+1):
-            if self.MaxPointCore(i, P, N) == True:
-                Lis.append(P[i])
-        return Lis
-                
-    def MaxPointCore(self, i, P, N):
-        for j in range(i, N+1):
-            if P[i][1] < P[j][1]:
-                return False
-        return True
+import sys
+n = int(sys.stdin.readline().strip())   #读取第一个输入，即点的个数n
+P = []
+for i in range(n):
+    P.append(list(map(int, sys.stdin.readline().strip().split())))
+P.sort(key=lambda k:k[0])   #按照x坐标从小到大排序
+    
+def MaxPointCore(i, P, n):
+    Flag = True
+    for j in range(i, n):
+        if P[i][1] < P[j][1]:
+            return False
+    return Flag
+    
+for i in range(n):
+    if MaxPointCore(i, P, n) == True:
+        print P[i][0], P[i][1]
