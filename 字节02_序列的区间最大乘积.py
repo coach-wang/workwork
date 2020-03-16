@@ -22,16 +22,15 @@
 36
 '''
 #思路 暴力解法，直接遍历
-class Solution:
-    def chengjiMax(self, n, lis):
-        if not lis:
-            return 0
-        Max = 0
-        for i in range(n):
-            Sum = 0
-            for j in range(i, n):
-                Sum += lis[j]
-                token = min(lis[i:j+1]) * Sum
-                if token > Max:
-                    Max = token
-        return Max
+import sys
+n = int(sys.stdin.readline().strip())
+P = list(map(int, sys.stdin.readline().strip().split()))
+Max = 0
+for i in range(n):
+    Sum = 0
+    for j in range(i, n):
+        Sum += P[j]
+        token = min(P[i:j+1]) * Sum
+        if token > Max:
+            Max = token
+print Max
