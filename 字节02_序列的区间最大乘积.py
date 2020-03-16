@@ -21,7 +21,7 @@
 输出例子1:
 36
 '''
-#思路 暴力解法，直接遍历
+#思路1 暴力解法，直接遍历  运行时间较长，
 import sys
 n = int(sys.stdin.readline().strip())
 P = list(map(int, sys.stdin.readline().strip().split()))
@@ -34,3 +34,27 @@ for i in range(n):
         if token > Max:
             Max = token
 print Max
+
+#思路2   时间复杂度更低，使用辅助栈，解析见https://blog.csdn.net/weixin_42001089/article/details/84203651
+#构建一个升序排列的栈
+n=int(raw_input())
+arr=[int(x) for x in raw_input()[:-1].split(' ')]
+ 
+arr.append(-1)
+i=0
+stack_pop_before=[]
+stack=[]
+ans=0
+while i<=n:
+    num=arr[i]
+    pop_sum=0
+    pop_before=0
+    while stack and num<stack[-1]:
+        pop_num=stack.pop()
+        pop_sum+=pop_num
+        pop_before+=stack_pop_before.pop()
+        ans=max(ans,(pop_before+pop_sum)*pop_num)
+    stack_pop_before.append(pop_before+pop_sum)
+    stack.append(num)
+    i+=1
+print ans
