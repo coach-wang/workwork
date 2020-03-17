@@ -26,37 +26,81 @@
 3
 9
 '''
-#思路：按照PM序号、所需时间、优先等级、提出时间进行分别进行排序，最后得到的就是每个idea排好的次序，然后按顺序执行即可
-class Solution:
-    def IdeaTime(self, matrix):
-        N = matrix[0][0]
-        M = matrix[0][1]
-        P = matrix[0][1]
-        for i in range(1, P+1):
-            matrix[i].append(i)
-        for i in range(1, P):   #先按PM序号排好
-            for j in range(1, P+1-i):  #注意这里用冒泡排序来逐个交换，不然会打乱前后顺序
-                if matrix[j][0] > matrix[j+1][0]:
-                    matrix[j], matrix[j+1] = matrix[j+1], matrix[j]
-        for i in range(1, P):  #2 按所需时间排好
-            for j in range(1, P+1-i)
-                if matrix[j][3] > matrix[j+1][3]:
-                    matrix[j], matrix[j+1] = matrix[j+1], matrix[j]
-        for i in range(1, P): #再按优先等级排好
-            for j in range(1, P+1-i):
-                if matrix[j][2] > matrix[j+1][2]:
-                    matrix[j], matrix[j+1] = matrix[j+1], matrix[j]
-        for i in range(1, P):  #最后按提出时间排好（要先提出程序员才能执行）
-            for j in range(1, P+1-i):
-                if matrix[j][1] > matrix[j+1][2]:
-                    matrix[j], matrix[j+1] = matrix[j+1], matrix[j]
-        time = [0]*P
-        for i in range(M):  #第一轮执行时间
-            time[matrix[i+1][4]] += matrix[i+1][1]  # 先加上提出时间
-            time[matrix[i+1][4]] += matrix[i+1][3]  #再加上所需时间
-        for i in range(M, P):
-            time[matrix[i+1][4]] += time[matrix[i+1-M][4]]   #加上之前经过的时间
-            time[matrix[i+1][4]] += matrix[i+1][3]
-        return time
+#思路：  (要用python3)
+# time_ideas字典
+# while Ture:
+#     time += 1
+#     更新执行队列任务剩余时间
+#     删除执行完的idea，更新程序员数量，记录完成时间
+#     if 执行队列为空 and 所有idea = 0:
+#         break
+#     更新每个pm现有的idea
+#     pm_ideas字典
+#     while 还有程序员 并且 现有任务数 > 0：
+#         找出每个pm现有的最想实现的idea
+#         判断实现哪个idea，并加入执行队列,并从待执行队列中删除
+#         任务数p -= 1
+#         程序员数m -= 1
+import sys
 
+def Find_finish_time(time_ideas, M, P):
+    time = 0
+    processing_ideas = []
+    finished_ideas = []
+    pm_ideas_dic ={}  #pm提出的还未执行的idea字典
+    n_remain_ideas = 0  #现有的idea数量
+    while True:
+        time += 1
+        if processing_ideas != []:
+            deleted_ideas = []
+            for i in processing_ideas:
+                i[3] -= 1
+                if i[3] == 0:
+                    deleted_ideas.append(i)
+            for i in deleted_ideas:
+                processing_ideas.remove(i)
+                M += 1   #程序员完成任务，又可以执行下一个啦
+                i.append(time)         #执行完成时间
+                finished_ideas.append(i)
         
+        if processing_ideas == [] and P == 0:   #所有idea都已提出并执行
+            break
+        
+        for t in time_ideas:
+            if t == time:
+                for i in time_ideas[t]:    #t时刻提出的idea，即现有的idea
+                    if i[0] not in pm_ideas_dic:
+                        pm_ideas_dic[i[0]] = []
+                    pm_ideas_dic[i[0]].append(i)
+                    n_remain_ideas += 1
+                break
+        
+        while M > 0 and n_remain_ideas > 0:
+            pm_want_idea = []
+            for i in pm_ideas_dic:
+                if pm_ideas_dic[i] != []:   #每个pm最想实现的idea
+                    pm_want_idea.append(min(pm_ideas_dic[i], key=lambda s:(-s[2], s[3], s[1])))
+        
+            if pm_want_idea != []:   #每个程序员优先执行的idea
+                want_idea = min(pm_want_idea, key=lambda s:(s[3], s[0]))
+                processing_ideas.append(want_idea)
+                pm_ideas_dic[want_idea[0]].remove(want_idea)
+                P -= 1
+                n_remain_ideas -= 1
+                M -= 1
+                
+    finished_ideas.sort(key=lambda k:k[4])
+    for i in finished_ideas:
+        print(i[5])
+   
+A = list(map(int, sys.stdin.readline().strip().split()))
+N, M, P = A[0], A[1], A[2]
+time_ideas = {}   #字典
+for i in range(P):
+    #0:pm序号 1:提出时间 2:优先等级 3:所需时间 4:任务序号 5：完成时间
+    idea = list(map(int, sys.stdin.readline().strip().split()))
+    idea.append(i)   
+    if idea[1] not in time_ideas:
+        time_ideas[idea[1]] = []   #按照提出时间的不同构建idea字典
+    time_ideas[idea[1]].append(idea)   #添加上任务序号
+Find_finish_time(time_ideas, M, P)
