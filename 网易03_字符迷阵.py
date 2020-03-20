@@ -67,7 +67,7 @@ def findWordRightDown(lis, word1, j, k):
     if not word1:
         return True
     if lis[j+1][k+1] == word1[0]:
-        return findWordRightDown(lis, word[1:], j+1, k+1)
+        return findWordRightDown(lis, word1[1:], j+1, k+1)
     else:
         return False
     
@@ -88,14 +88,15 @@ for i in range(T):
     for j in range(row_column[i][0]):
         for k in range(row_column[i][1]):
             if Lis[i][j][k] == word[i][0]:
-                if row_column[i][1]-k >= wordLength:
-                    if findWordRight(Lis[i], word[i][1:], j, k) == True:
+                if row_column[i][1]-k >= wordLength:    #先判断边界条件
+                    if findWordRight(Lis[i], word[i][1:], j, k) == True:   #往右边找
                         nWords[i] += 1
                 if row_column[i][0]-j >= wordLength:
-                    if findWordDown(Lis[i], word[i][1:], j, k) == True:
+                    if findWordDown(Lis[i], word[i][1:], j, k) == True:   #往下找
                         nWords[i] += 1
                     if row_column[i][1]-k >= wordLength:
-                        if findWordRightDown(Lis[i], word[i][1:], j, k) == True:
+                        if findWordRightDown(Lis[i], word[i][1:], j, k) == True:   #往右下找
                             nWords[i] += 1
+
+for i in range(T):
     print(nWords[i])
-                    
