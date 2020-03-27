@@ -15,7 +15,7 @@
 4
 '''
 '''
-思路：
+思路1：
 假设第一天吃n块，M天下来一共吃了（1+1/2+...1/(2^(M-1))）*n块，考虑取整数，要用四舍五入，所以一共吃的块数肯定大于（1+1/2+...1/(2^(M-1))）*n
 即n肯定小于M/（1+1/2+...1/(2^(M-1))）
 然后从这个数开始往下找
@@ -42,3 +42,32 @@ vol = int(M/base)
 while sum(N,vol) > M:
     vol = vol - 1
 print(vol)
+
+'''
+思路2：使用二分法，时间复杂度更低
+'''
+P = []
+P = list(map(int, input().strip().split()))
+N, M = P[0], P[1]
+
+def countSugar(num, k):
+    sum = 0
+    while k > 0:
+        sum += num
+        num = int(num/2+0.5)
+        k -= 1
+    return sum
+
+left, right = 0, M
+while left < right:
+    mid = int((left + right)/2+0.5)
+    if countSugar(mid, N) < M:
+        left = mid
+    elif countSugar(mid, N) > M:
+        right = mid - 1  #注意这里要-1
+    else:   #如果相等正好输出
+        left = mid
+        right = mid
+print(left)
+ 
+
