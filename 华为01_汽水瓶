@@ -20,14 +20,8 @@
 '''
 '''
 如果大于3瓶，可以继续循环，等于2瓶，再加1瓶
+（其实n_bottle就等于空瓶数/2:两个空瓶换1瓶饮料）
 '''
-P = []
-for i in range(10):
-    a = int(input().strip())
-    if a == 0:
-        break
-    else:
-        P.append(a)
 def count_bottle(n):
     n_bottle = 0
     while n >= 3:
@@ -38,6 +32,11 @@ def count_bottle(n):
         n_bottle += 1
     return n_bottle
 
-for i in range(len(P)):
-    print(count_bottle(P[i]))
+while True:
+    try:
+        a = int(input().strip())
+        if a != 0:
+            print(count_bottle(a))
+    except:
+        break
 
