@@ -10,6 +10,7 @@ for i in range(n):
 dic = {}
 idea = list()
 if idea[i] not in dic:
+    
     dic[idea[i]].append(idea)
 #读取字典：
 for t in dic:   
